@@ -22,13 +22,13 @@ test.describe('Pet Types', () => {
         await expect(page.getByRole('heading')).toHaveText('Edit Pet Type')
         
         // 5. Change the pet type name from "cat" to "rabbit" and click "Update" button
-        const petTypeInputField = page.locator('input[name="name"]')
+        const petTypeInputField = page.getByRole('textbox')
         await expect(petTypeInputField).toHaveValue('cat')
         await petTypeInputField.fill('rabbit')
         await page.getByRole('button', {name:'Update'}).click()
         
         // 6. Add the assertion that the first pet type in the list of types has a value "rabbit" 
-        const firstPetTypeInputField = (page.locator('[id="0"]'))
+        const firstPetTypeInputField = page.locator('[id="0"]')
         await expect(firstPetTypeInputField).toHaveValue('rabbit')
 
         // 7. Click on "Edit" button for the same "rabbit" pet type
@@ -48,7 +48,7 @@ test.describe('Pet Types', () => {
         await page.getByRole('row', {name:'dog'}).getByRole('button', {name: 'Edit'}).click()
 
         // 4. Type the new pet type name "moose"
-        const petTypeInputField = page.locator('input[name="name"]')
+        const petTypeInputField = page.getByRole('textbox')
         await expect(petTypeInputField).toHaveValue('dog')
         await petTypeInputField.fill('moose')
 
@@ -68,7 +68,7 @@ test.describe('Pet Types', () => {
         await page.getByRole('row', {name:'lizard'}).getByRole('button', {name:'Edit'}).click()
 
         // 4. On the Edit Pet Type page, clear the input field
-        const petTypeInputField = page.locator('input[name="name"]')
+        const petTypeInputField = page.getByRole('textbox')
         await expect(petTypeInputField).toHaveValue('lizard')
         await petTypeInputField.clear()
         
