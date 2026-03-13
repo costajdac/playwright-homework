@@ -28,20 +28,20 @@ test.describe('Checkboxes', () => {
 
     // 6. Add assertion that "radiology" specialty is checked
     const radiologyCheckbox = page.getByRole('checkbox', {name:'radiology'})
-    expect(radiologyCheckbox.isChecked).toBeTruthy()
+    expect(await radiologyCheckbox.isChecked()).toBeTruthy()
 
     // 7. Add assertion that "surgery" and "dentistry" specialties are unchecked
     const surgeryCheckbox = page.getByRole('checkbox', {name:'surgery'})
-    expect(surgeryCheckbox.isChecked).toBeTruthy()
+    expect(await surgeryCheckbox.isChecked()).toBeFalsy()
     const dentistryCheckbox = page.getByRole('checkbox', {name:'dentistry'})
-    expect(dentistryCheckbox.isChecked).toBeTruthy()
+    expect(await dentistryCheckbox.isChecked()).toBeFalsy()
 
     // 8. Check the "surgery" item specialty and uncheck the "radiology" item speciality 
     await surgeryCheckbox.check()
     await radiologyCheckbox.uncheck()
     
     // 9. Add assertion of the "Specialties" field displayed value "surgery"
-    await expect(specialtiesDropDown).toContainText('surgery')
+    await expect(specialtiesDropDown).toHaveText('surgery')
 
     // 10. Check the "dentistry" item specialty
     await dentistryCheckbox.check()
@@ -63,10 +63,10 @@ test('Select All Specialties', async({page}) => {
     
     // 5. Check all specialties from the list
     // 6. Add assertion that all specialties are checked
-    const allSpecialtiesDropDownContent = page.getByRole('checkbox')
-    for(const item of await allSpecialtiesDropDownContent.all()){
-      await item.check()
-      expect(item.isChecked).toBeTruthy()
+    const allSpecialtiesCheckbox = page.getByRole('checkbox')
+    for(const checkboxItems of await allSpecialtiesCheckbox.all()){
+      await checkboxItems.check()
+      expect(await checkboxItems.isChecked()).toBeTruthy()
     }
   
     // 7. Add assertion that all checked specialities are displayed in the "Specialties" field
@@ -93,6 +93,6 @@ test('unselect all specialties', async({page}) => {
     }
     
     // 7. Add assertion that "Specialties" field is empty
-    await expect(specialtiesDropDown).toHaveText('')
+    await expect(specialtiesDropDown).toBeEmpty()
 })
 })
