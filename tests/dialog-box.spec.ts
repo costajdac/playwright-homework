@@ -38,6 +38,6 @@ test.describe('Dialog Boxes', () => {
         await page.getByRole('row', {name:'pig'}).getByRole('button', { name: 'Delete' }).click()
 
         // 10. Add an assertion that the last item in the list of pet types is not the "pig"
-        await expect(page.locator('input[name="pettype_name"]').last()).not.toHaveValue('hamster')
+        await expect(page.locator('input[name="pettype_name"]').last()).not.toHaveValue('pig')
     })
 })
