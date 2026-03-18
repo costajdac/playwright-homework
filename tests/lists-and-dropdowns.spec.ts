@@ -22,7 +22,9 @@ test.describe('Lists and Dropdowns', () => {
         await expect(page.locator('.ownerFullName')).toHaveText('George Franklin')
 
         // 5. In the "Pets and Visits" section, click on "Edit Pet" button for the pet with the name "Leo"
-        await page.getByRole('button', {name:'Edit Pet'}).click()
+        const leoPetSection =  page.locator('app-pet-list', { hasText: 'Leo'})
+        const editPetButton = leoPetSection.getByRole('button', {name:'Edit Pet'})
+        await editPetButton.click()
 
         // 6. Add assertion of "Pet" text displayed as a header on the page
         await expect(page.getByRole('heading')).toHaveText('Pet')
@@ -40,7 +42,7 @@ test.describe('Lists and Dropdowns', () => {
 
         for(const petDropDownItem of allPetTypeDropDownList){
             await selectedPetDropDownField.selectOption(petDropDownItem )
-            await expect(selectedPetDropDownField).toHaveValue(petDropDownItem)
+            await expect(petTypeInputField).toHaveValue(petDropDownItem)
         }
         // Hint: To select the options from the dropdown, use the Playwright method selectOption()
     })
@@ -50,8 +52,8 @@ test.describe('Lists and Dropdowns', () => {
         await page.getByRole('link', {name:'Eduardo Rodriquez'}).click()
 
         // 4. In the "Pets and Visits" section, click on "Edit Pet" button for the pet with the name "Rosy"
-        const petNameDisplay =  page.locator('tr', {has: page.locator('dd', { hasText: 'Rosy' })}).last()
-        const editPetButton = petNameDisplay.getByRole('button', {name:'Edit Pet'})
+        const petAndVisitsSection =  page.locator('app-pet-list', { hasText: 'Rosy'})
+        const editPetButton = petAndVisitsSection.getByRole('button', {name:'Edit Pet'})
         await editPetButton.click()
 
         // 5. Add the assertion that the name "Rosy" is displayed in the input field "Name"
@@ -71,10 +73,10 @@ test.describe('Lists and Dropdowns', () => {
         await expect(petTypeInputField).toHaveValue('bird')
 
         // 9. Select the "Update Pet" button
-        await page.getByRole('button', {name:'Update'}).click()
+        await page.getByRole('button', {name:'Update Pet'}).click()
 
         // 10. On the "Owner Information" page, add the assertion that the pet "Rosy" has a new value of the Type "bird"
-        await expect(petNameDisplay).toContainText('bird')
+        await expect(petAndVisitsSection.locator('dd').nth(2)).toHaveText('bird')
 
         // 11. Select the "Edit Pet" button one more time, and perform steps 6-10 to revert the selection of the pet type "bird" to its initial value "dog"
         await editPetButton.click()
@@ -82,8 +84,8 @@ test.describe('Lists and Dropdowns', () => {
         await selectedPetDropDownField.selectOption('dog')
         await expect(selectedPetDropDownField).toHaveValue('dog')
         await expect(petTypeInputField).toHaveValue('dog')
-        await page.getByRole('button', {name:'Update'}).click()
-        await expect(petNameDisplay).toContainText('dog')
+        await page.getByRole('button', {name:'Update Pet'}).click()
+        await expect(petAndVisitsSection.locator('dd').nth(2)).toHaveText('dog')
 
     })
 })
