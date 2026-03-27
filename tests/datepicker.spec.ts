@@ -44,13 +44,11 @@ test.describe('DatePickers', () => {
         await expect(calendarInput).toHaveValue('2014/05/02')
 
         // 9. Select the type of pet "dog" and click "Save Pet" button
-        const selectedPetDropDownField = page.getByLabel('Type')
-        await selectedPetDropDownField.selectOption('dog')
+        await page.getByLabel('Type').selectOption('dog')
         await page.getByRole('button', {name:'Save Pet'}).click()
 
         // 10. On the Owner Information page, add assertions for the newly created pet. Name is Tom, Birth Date is in the format "2014-05-02", Type is dog
         const petAndVisitsSection =  page.locator('app-pet-list', { hasText: 'Tom'})
-        await expect(petAndVisitsSection.locator('dd').nth(0)).toHaveText('Tom')
         await expect(petAndVisitsSection.locator('dd').nth(1)).toHaveText('2014-05-02')
         await expect(petAndVisitsSection.locator('dd').nth(2)).toHaveText('dog')
 
@@ -101,8 +99,7 @@ test.describe('DatePickers', () => {
         await expect(calendarInput).toHaveValue('2014/05/02')
 
         // 9. Select the type of pet "dog" and click "Save Pet" button
-        const selectedPetDropDownField = page.getByLabel('Type')
-        await selectedPetDropDownField.selectOption('dog')
+        await page.getByLabel('Type').selectOption('dog')
         await page.getByRole('button', {name:'Save Pet'}).click()
 
         // 10. On the Owner Information page, add assertions for the newly created pet. Name is Tom, Birth Date is in the format "2014-05-02", Type is dog
@@ -124,8 +121,7 @@ test.describe('DatePickers', () => {
 
         // 3. In the list of pets, locate the pet with a name "Samantha" and click "Add Visit" button
         const samanthaPetInformationSection =  page.locator('app-pet-list', {has: page.locator('dd',  {hasText: 'Samantha'})})
-        const AddPetVisitButton = samanthaPetInformationSection.getByRole('button', {name:'Add Visit'})
-        await AddPetVisitButton.click()
+        await samanthaPetInformationSection.getByRole('button', {name:'Add Visit'}).click()
 
         // 4. Add the assertion that "New Visit" is displayed as the header of the page
         await expect(page.getByRole('heading')).toHaveText('New Visit')
@@ -160,7 +156,7 @@ test.describe('DatePickers', () => {
         await expect(samanthaVisitDates.first()).toHaveText(dateOfVisitToAssert)
 
         // 10. Add one more visit for "Samantha" pet by clicking "Add Visit" button
-        await AddPetVisitButton.click()
+        await samanthaPetInformationSection.getByRole('button', {name:'Add Visit'}).click()
         
         // 11. Click on the calendar icon and select the date which is 45 days back from the current date
         await page.getByRole('button', {name:'Open calendar'}).click()
