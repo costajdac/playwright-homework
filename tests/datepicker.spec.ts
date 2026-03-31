@@ -16,17 +16,17 @@ test.describe("DatePickers", () => {
     await page.getByRole("link", { name: "Harold Davis" }).click();
 
     // 3. On the Owner Information page, select the "Add New Pet" button
+    await page.waitForLoadState("domcontentloaded")
     await page.getByRole("button", { name: "Add New Pet" }).click();
 
     // 4. In the Name field, type any new pet name, for example, "Tom"
     const petNameInputField = page.locator('input[name="name"]');
-    const formGroup = page.locator(".form-group", { has: petNameInputField });
-    const validateIcon = formGroup.locator(".form-control-feedback");
+    const nameFieldIcon = page.locator(".form-group", { has: petNameInputField }).locator(".form-control-feedback");
 
     // 5. Add the assertion of icon in the input field, that it changed from "X" to "V"
-    await expect(validateIcon).toHaveClass(/glyphicon-remove/);
+    await expect(nameFieldIcon).toHaveClass(/glyphicon-remove/);
     await petNameInputField.fill("Tom");
-    await expect(validateIcon).toHaveClass(/glyphicon-ok/);
+    await expect(nameFieldIcon).toHaveClass(/glyphicon-ok/);
 
     // 6. Click on the calendar icon for the "Birth Date" field
     const calendarInput = page.locator('input[name="birthDate"]');
@@ -47,18 +47,12 @@ test.describe("DatePickers", () => {
     await page.getByRole("button", { name: "Save Pet" }).click();
 
     // 10. On the Owner Information page, add assertions for the newly created pet. Name is Tom, Birth Date is in the format "2014-05-02", Type is dog
-    const tomPetAndVisitsSection = page.locator("app-pet-list", {
-      hasText: "Tom",
-    });
-    await expect(tomPetAndVisitsSection.locator("dd").nth(1)).toHaveText(
-      "2014-05-02",
-    );
+    const tomPetAndVisitsSection = page.locator("app-pet-list", {hasText: "Tom",});
+    await expect(tomPetAndVisitsSection.locator("dd").nth(1)).toHaveText("2014-05-02",);
     await expect(tomPetAndVisitsSection.locator("dd").nth(2)).toHaveText("dog");
 
     // 11. Click the "Delete Pet" button for the new pet "Tom"
-    await tomPetAndVisitsSection
-      .getByRole("button", { name: "Delete Pet" })
-      .click();
+    await tomPetAndVisitsSection.getByRole("button", { name: "Delete Pet" }).click();
 
     // 12. Add an assertion that Tom does not exist in the list of pets anymore
     await expect(tomPetAndVisitsSection).not.toBeVisible();
@@ -66,30 +60,20 @@ test.describe("DatePickers", () => {
     // Hint: To add the assertion for step 5, analyze what is changed in the DOM when the icon is changed
   });
 
-  test("Select the dates of visits and validate dates order", async ({
-    page,
-  }) => {
+  test("Select the dates of visits and validate dates order", async ({page,}) => {
     // 2. In the list of the Owners, locate the owner by the name "Jean Coleman" and select this owner
     await page.getByRole("link", { name: "Jean Coleman" }).click();
 
     // 3. In the list of pets, locate the pet with a name "Samantha" and click "Add Visit" button
-    const samanthaPetInformationSection = page.locator("app-pet-list", {
-      hasText: "Samantha",
-    });
-    await samanthaPetInformationSection
-      .getByRole("button", { name: "Add Visit" })
-      .click();
+    const samanthaPetInformationSection = page.locator("app-pet-list", {hasText: "Samantha",});
+    await samanthaPetInformationSection.getByRole("button", { name: "Add Visit" }).click();
 
     // 4. Add the assertion that "New Visit" is displayed as the header of the page
     await expect(page.getByRole("heading")).toHaveText("New Visit");
 
     // 5. Add the assertion that the pet name is "Samantha" and owner's name is "Jean Coleman"
-    const samanthaNewVisitPetRow = page.locator("table tr", {
-      hasText: "Samantha",
-    });
-    await expect(samanthaNewVisitPetRow.getByRole("cell").last()).toHaveText(
-      "Jean Coleman",
-    );
+    const samanthaNewVisitPetRow = page.locator("table tr", {hasText: "Samantha",});
+    await expect(samanthaNewVisitPetRow.getByRole("cell").last()).toHaveText("Jean Coleman",);
 
     // 6. Click on the calendar icon and select the current date in date picker
     await page.getByRole("button", { name: "Open calendar" }).click();
@@ -112,15 +96,11 @@ test.describe("DatePickers", () => {
 
     // 9. Add an assertion that the selected date of visit is displayed at the top of the list of visits for "Samantha" pet on the "Owner Information" page and is in the format "YYYY-MM-DD"
     const dateOfVisitToAssert = `${yearOfVisit}-${monthOfVisit}-${dayOfVisit}`;
-    const samanthaVisitDates = samanthaPetInformationSection.locator(
-      "app-visit-list table tr td:first-child",
-    );
+    const samanthaVisitDates = samanthaPetInformationSection.locator("app-visit-list table tr td:first-child");
     await expect(samanthaVisitDates.first()).toHaveText(dateOfVisitToAssert);
 
     // 10. Add one more visit for "Samantha" pet by clicking "Add Visit" button
-    await samanthaPetInformationSection
-      .getByRole("button", { name: "Add Visit" })
-      .click();
+    await samanthaPetInformationSection.getByRole("button", { name: "Add Visit" }).click();
 
     // 11. Click on the calendar icon and select the date which is 45 days back from the current date
     await page.getByRole("button", { name: "Open calendar" }).click();
@@ -148,17 +128,9 @@ test.describe("DatePickers", () => {
     expect(firstVisitDate > secondVisitDate).toBeTruthy();
 
     // 14. Select the "Delete Visit" button for both newly created visits
-    const dermatologistVisitRow = samanthaPetInformationSection.locator(
-      "app-visit-list table tr",
-      { hasText: "dermatologists" },
-    );
-    await dermatologistVisitRow
-      .getByRole("button", { name: "Delete Visit" })
-      .click();
-    const massageVisitRow = samanthaPetInformationSection.locator(
-      "app-visit-list table tr",
-      { hasText: "massage therapy" },
-    );
+    const dermatologistVisitRow = samanthaPetInformationSection.locator("app-visit-list table tr",{ hasText: "dermatologists" });
+    await dermatologistVisitRow.getByRole("button", { name: "Delete Visit" }).click();
+    const massageVisitRow = samanthaPetInformationSection.locator("app-visit-list table tr",{ hasText: "massage therapy" });
     await massageVisitRow.getByRole("button", { name: "Delete Visit" }).click();
 
     // 15. Add the assertion that deleted visits are no longer displayed in the table on "Owner Information" page
